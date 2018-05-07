@@ -1,0 +1,5 @@
+package: localhostTest/go-Worker
+import:
+- package: localhostTest/go-Call/call
+- package: localhostTest/go-Call/test
+- package: localhostTest/go-worker-base/worker
