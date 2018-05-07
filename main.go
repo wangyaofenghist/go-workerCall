@@ -7,8 +7,6 @@ import (
 	"github.com/wangyaofenghist/go-Call/test"
 	"github.com/wangyaofenghist/go-worker-base/worker"
 	"net/http"
-	"os"
-	"runtime/pprof"
 	"time"
 )
 
@@ -51,11 +49,11 @@ func (f *runWorker) Run(param []worker.ParamType) {
 
 //主函数
 func main() {
+	var resultChan = make(chan worker.ReturnType)
 	go func() {
 		log.Println(http.ListenAndServe("localhost:6060", nil))
 	}()
-	f, _ := os.Create("profile_file")
-	pprof.StartCPUProfile(f)
+
 	var runFunc runWorker = runWorker{}
 	funcs.AddCall("test4", test.Test4)
 	var startTime = time.Now().Unix()
@@ -83,6 +81,7 @@ func main() {
 	fmt.Println(lastTime - endTime)
 
 	fmt.Println(startTime, modTime, endTime)
-	defer pprof.StopCPUProfile()
+
+	<-resultChan
 	//time.Sleep(time.Millisecond * 1000)
 }
