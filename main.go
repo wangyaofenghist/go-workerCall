@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"github.com/CodisLabs/codis/pkg/utils/log"
-	"localhostTest/go-Call/call"
-	"localhostTest/go-Call/test"
-	"localhostTest/go-worker-base/worker"
+	"github.com/wangyaofenghist/go-Call/call"
+	"github.com/wangyaofenghist/go-Call/test"
+	"github.com/wangyaofenghist/go-worker-base/worker"
 	"net/http"
 	"os"
 	"runtime/pprof"
