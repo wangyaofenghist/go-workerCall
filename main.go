@@ -31,57 +31,47 @@ func init() {
 }
 
 //通用回调
-func (f *runWorker) Run(param []worker.ParamType) {
+func (f *runWorker) Run(param []interface{}) {
 	name := param[0].(string)
-	var callParam []call.Params
-	//将结果转换成 回调需要的数据
-	for k, v := range param {
-		if k == 0 {
-			continue
-		}
-		callParam = append(callParam, v)
-	}
 	//调用回调并拿回结果
-	funcs.Call(name, callParam...)
-	//var re string = result[0].String()
-	//fmt.Println(re)
+	funcs.Call(name, param[1:]...)
 }
 
 //主函数
 func main() {
-	var resultChan = make(chan worker.ReturnType)
+	var resultChan = make(chan interface{})
 	go func() {
 		log.Println(http.ListenAndServe("localhost:6060", nil))
 	}()
 
 	var runFunc runWorker = runWorker{}
 	funcs.AddCall("test4", test.Test4)
-	var startTime = time.Now().Unix()
+	var startTime = time.Now().UnixNano()
 	for i := 0; i < 10000; i++ {
 		poolOne.Run(runFunc.Run, "test4", " aa ", " BB")
 		poolOne.Run(runFunc.Run, "test4", " cc ", " dd")
 		poolOne.Run(runFunc.Run, "test4", " ee ", " ff")
 	}
-	var modTime = time.Now().Unix()
+	var modTime = time.Now().UnixNano()
 
 	for k := 0; k < 10000; k++ {
 		test.Test4(" aa ", "BB")
 		test.Test4(" cc ", " dd")
 		test.Test4(" ee ", " ff")
 	}
-	var endTime = time.Now().Unix()
+	var endTime = time.Now().UnixNano()
 	for j := 0; j < 10000; j++ {
 		funcs.Call("test4", " aa ", "BB")
 		funcs.Call("test4", " cc ", " dd")
 		funcs.Call("test4", " ee ", " ff")
 	}
-	var lastTime = time.Now().Unix()
+	var lastTime = time.Now().UnixNano()
 	fmt.Println(modTime - startTime)
 	fmt.Println(endTime - modTime)
 	fmt.Println(lastTime - endTime)
 
 	fmt.Println(startTime, modTime, endTime)
-
+	poolOne.Stop()
 	<-resultChan
 	//time.Sleep(time.Millisecond * 1000)
 }

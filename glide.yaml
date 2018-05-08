@@ -1,5 +1,13 @@
-package: localhostTest/go-Worker
+package: github.com/wangyaofenghist/go-workerCall
 import:
-- package: localhostTest/go-Call/call
-- package: localhostTest/go-Call/test
-- package: localhostTest/go-worker-base/worker
+- package: github.com/CodisLabs/codis
+  version: ^3.2.2
+  subpackages:
+  - pkg/utils/log
+- package: github.com/wangyaofenghist/go-Call
+  subpackages:
+  - call
+  - test
+- package: github.com/wangyaofenghist/go-worker-base
+  subpackages:
+  - worker
